@@ -1,0 +1,55 @@
+version: "3"
+
+volumes:
+  ast_etc:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/docker_volumes/asterisk/etc/
+
+  ast_sounds:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/docker_volumes/asterisk/sounds
+
+  ast_monitor:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/docker_volumes/asterisk/monitor
+
+  ast_voicemail:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/docker_volumes/asterisk/voicemail
+
+  ast_tmp:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/docker_volumes/asterisk/tmp
+
+services:
+  asterisk:
+    image: aster
+    container_name: asterisk
+    hostname: asterisk
+    volumes:
+      - ast_etc:/etc/asterisk/
+      - ast_sounds:/var/lib/asterisk/sounds/
+      - ast_monitor:/var/spool/asterisk/monitor/
+      - ast_voicemail:/var/spool/asterisk/voicemail/
+      - ast_tmp:/var/spool/asterisk/tmp/
+      - /home/docker_volumes/asterisk/scripts/:/var/lib/asterisk/scripts/custom/
+    network_mode: host
+    restart: always
+    # command: ["tail",  "-f", "/dev/null"]
+    command: ["/usr/sbin/asterisk", "-vvvdddf"]
+
